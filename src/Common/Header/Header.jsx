@@ -42,7 +42,8 @@ const Header = () => {
     try {
       // const response = await axios.post("http://localhost:3034/image-search", formData, {
       const response = await axios.post(
-        "https://genzback.onrender.com/image-search",
+        // "https://genzback.onrender.com/image-search",
+        "https://gen-z-back.vercel.app/",
         formData,
         {
           headers: {

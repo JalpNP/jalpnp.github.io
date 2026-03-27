@@ -72,7 +72,9 @@ const Ai = () => {
               <img
                 key={idx}
                 // src={`http://localhost:3034/uploads/${img}`}
-                src={`https://genzback.onrender.com/uploads/${img}`}
+                // src={`https://genzback.onrender.com/uploads/${img}`}
+
+                src={`https://gen-z-back.vercel.app/uploads/${img}`}
                 alt="similar"
                 style={{ width: "150px", margin: "10px", borderRadius: "8px" }}
               />

@@ -12,7 +12,8 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         // const response = await axios.get("http://localhost:3034/api");
-        const response = await axios.get("https://genzback.onrender.com/api");
+        // const response = await axios.get("https://genzback.onrender.com/api");
+        const response = await axios.get("  https://gen-z-back.vercel.app/api");
 
         if (response.data.success) {
           setCategories(response.data.data);
@@ -28,7 +29,8 @@ const ProductList = () => {
   const handleDelete = async (categoryId, productId) => {
     try {
       const response = await axios.post(
-        "https://genzback.onrender.com/api/products/delete",
+        // "https://genzback.onrender.com/api/products/delete",
+        "https://gen-z-back.vercel.app/api/products/delete",
         { categoryId, productId },
       );
       if (response.data.success) {
@@ -102,7 +104,9 @@ const ProductList = () => {
 
       try {
         const response = await axios.post(
-          "https://genzback.onrender.com/api/product-add",
+          // "https://genzback.onrender.com/api/product-add",
+          "https://gen-z-back.vercel.app/api/product-add",
+
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },

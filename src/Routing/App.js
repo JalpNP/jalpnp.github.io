@@ -46,7 +46,6 @@ function App() {
      
 
       <Routes>
-        <Route path="*" element={<NoPage />} />
         <Route path="/admin-page" element={<Admin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/contactus" element={<ContactForm />} />
@@ -70,6 +69,7 @@ function App() {
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/login" element={<OTPForm />} />
         <Route path="/user-login" element={<LoginEmail />} />
+        <Route path="*" element={<NoPage />} />
       </Routes>
 
 

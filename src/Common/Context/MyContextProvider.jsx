@@ -108,7 +108,8 @@ const MyContextProvider = ({ children }) => {
   // for youtube open(newslater) end
 
   // const url = "http://localhost:3034";
-  const url = "https://genzback.onrender.com";
+  // const url = "https://genzback.onrender.com";
+  const url = "https://gen-z-back.vercel.app";
   //
 
   const [passModalOpen, setPassModalOpen] = useState(true);

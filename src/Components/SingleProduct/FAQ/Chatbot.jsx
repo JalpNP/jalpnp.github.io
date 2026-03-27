@@ -1,11 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import "./Chatbot.scss";
 import MyContext from "../../../Common/Context/MyContext";
 import axios from "axios";
-import { io } from "socket.io-client";
-
-// const socket = io("http://localhost:3042");
-const socket = io("https://genzback.onrender.com");
 
 const Chatbot = () => {
   const { url } = useContext(MyContext);
@@ -16,6 +12,7 @@ const Chatbot = () => {
   const [faqStep, setFaqStep] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [manualComplete, setManualComplete] = useState(false); // Track FAQ completion
+  const lastTimestamp = useRef(0);
 
   const userId =
     localStorage.getItem("userId") ||
@@ -23,21 +20,34 @@ const Chatbot = () => {
 
   useEffect(() => {
     localStorage.setItem("userId", userId);
-    socket.emit("register_user", userId);
+    axios.post(`${url}/chat/register`, { userId }).catch(() => {});
   }, []);
 
+  // Poll for admin replies every 3 seconds when in live chat mode
   useEffect(() => {
-    socket.on("receive_admin_reply", (data) => {
-      setMessages((prev) => [
-        ...prev,
-        { message: `Admin: ${data.text}`, isUser: false },
-      ]);
-    });
-
-    return () => {
-      socket.off("receive_admin_reply");
-    };
-  }, []);
+    if (manualChat) return;
+    const interval = setInterval(async () => {
+      try {
+        const { data } = await axios.get(
+          `${url}/chat/poll/${userId}?since=${lastTimestamp.current}`,
+        );
+        const adminMsgs = data.filter((m) => m.sender === "admin");
+        if (adminMsgs.length > 0) {
+          setMessages((prev) => [
+            ...prev,
+            ...adminMsgs.map((m) => ({
+              message: `Admin: ${m.text}`,
+              isUser: false,
+            })),
+          ]);
+          lastTimestamp.current = Math.max(...data.map((m) => m.timestamp));
+        }
+      } catch (err) {
+        // ignore polling errors
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [manualChat, url, userId]);
 
   // Fetch manual questions from backend
   useEffect(() => {
@@ -118,7 +128,9 @@ const Chatbot = () => {
     if (userMessage.trim() === "") return;
 
     setMessages((prev) => [...prev, { message: userMessage, isUser: true }]);
-    socket.emit("message", { text: userMessage, userId });
+    axios
+      .post(`${url}/chat/message`, { text: userMessage, userId })
+      .catch(() => {});
 
     setUserMessage("");
   };

@@ -86,7 +86,8 @@ const Contactdata = ({ contactdata }) => {
                     <td>
                       <a
                         // href={`http://localhost:3034${returns.file}`}
-                        href={`https://genzback.onrender.com${returns.file}`}
+                        // href={`https://genzback.onrender.com${returns.file}`}
+                        href={`https://gen-z-back.vercel.app${returns.file}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

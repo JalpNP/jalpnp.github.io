@@ -1,56 +1,81 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "./CustomerInqChatPage.scss";
 
-// const socket = io("http://localhost:3042");
-const socket = io("https://genzback.onrender.com");
+const API_URL = "https://gen-z-back.vercel.app";
 
 const CustomerInqChatPage = () => {
   const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const lastTimestamps = useRef({});
 
+  // Poll for users and new messages every 3 seconds
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessages((prev) => ({
-        ...prev,
-        [data.userId]: [
-          ...(prev[data.userId] || []),
-          { text: data.text, sender: "user" },
-        ],
-      }));
+    const interval = setInterval(async () => {
+      try {
+        // Fetch active users
+        const { data: userList } = await axios.get(`${API_URL}/chat/users`);
+        setUsers(userList);
 
-      if (!users.includes(data.userId)) {
-        setUsers((prevUsers) => [...prevUsers, data.userId]);
+        // Poll new messages for the selected user
+        if (selectedUser) {
+          const since = lastTimestamps.current[selectedUser] || 0;
+          const { data: newMsgs } = await axios.get(
+            `${API_URL}/chat/poll/${selectedUser}?since=${since}`,
+          );
+          if (newMsgs.length > 0) {
+            setMessages((prev) => {
+              const existing = prev[selectedUser] || [];
+              // Only add messages we don't already have locally
+              const userNewMsgs = newMsgs.filter((m) => m.sender === "user");
+              return { ...prev, [selectedUser]: [...existing, ...userNewMsgs] };
+            });
+            lastTimestamps.current[selectedUser] = Math.max(
+              ...newMsgs.map((m) => m.timestamp),
+            );
+          }
+        }
+      } catch (err) {
+        // ignore polling errors
       }
-    });
-
-    socket.on("load_chat_history", (chatHistory) => {
-      setMessages((prev) => ({ ...prev, [selectedUser]: chatHistory }));
-    });
-
-    return () => {
-      socket.off("receive_message");
-      socket.off("load_chat_history");
-    };
+    }, 3000);
+    return () => clearInterval(interval);
   }, [selectedUser]);
 
-  const handleUserSelect = (userId) => {
+  const handleUserSelect = async (userId) => {
     setSelectedUser(userId);
-    socket.emit("fetch_user_chat", userId);
+    try {
+      const { data: history } = await axios.get(
+        `${API_URL}/chat/history/${userId}`,
+      );
+      setMessages((prev) => ({ ...prev, [userId]: history }));
+      if (history.length > 0) {
+        lastTimestamps.current[userId] = Math.max(
+          ...history.map((m) => m.timestamp),
+        );
+      }
+    } catch (err) {
+      console.error("Error fetching chat history:", err);
+    }
   };
 
   const handleSend = () => {
     if (message.trim() === "" || !selectedUser) return;
 
-    socket.emit("admin_reply", { text: message, userId: selectedUser });
+    axios
+      .post(`${API_URL}/chat/admin-reply`, {
+        text: message,
+        userId: selectedUser,
+      })
+      .catch(() => {});
 
     setMessages((prev) => ({
       ...prev,
       [selectedUser]: [
         ...(prev[selectedUser] || []),
-        { text: message, sender: "admin" },
+        { text: message, sender: "admin", timestamp: Date.now() },
       ],
     }));
     setMessage("");
