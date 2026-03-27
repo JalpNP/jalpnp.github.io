@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/GenZFront/static/css/main.fd1c3027.css",
-    "main.js": "/GenZFront/static/js/main.eabfbb73.js",
+    "main.js": "/GenZFront/static/js/main.bcf9f0ee.js",
     "static/media/revicons.eot": "/GenZFront/static/media/revicons.a77de540a38981833f9e.eot",
     "static/media/revicons.ttf": "/GenZFront/static/media/revicons.57fd05d4ae650374c8de.ttf",
     "static/media/logo.png": "/GenZFront/static/media/logo.092495035c3b4ded8926.png",
     "static/media/revicons.woff": "/GenZFront/static/media/revicons.e8746a624ed098489406.woff",
     "index.html": "/GenZFront/index.html",
     "main.fd1c3027.css.map": "/GenZFront/static/css/main.fd1c3027.css.map",
-    "main.eabfbb73.js.map": "/GenZFront/static/js/main.eabfbb73.js.map"
+    "main.bcf9f0ee.js.map": "/GenZFront/static/js/main.bcf9f0ee.js.map"
   },
   "entrypoints": [
     "static/css/main.fd1c3027.css",
-    "static/js/main.eabfbb73.js"
+    "static/js/main.bcf9f0ee.js"
   ]
 }

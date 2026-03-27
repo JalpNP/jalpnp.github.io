@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import Categories from "../Categories/Categories";
 import "./Home.scss";
 import Productlist from "../Products/Productlist";
 import { Helmet } from "react-helmet";
-import MyContext from "../../Common/Context/MyContext";
 
 const Home = () => {
   return (

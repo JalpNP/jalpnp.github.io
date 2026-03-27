@@ -21,7 +21,7 @@ const Chatbot = () => {
   useEffect(() => {
     localStorage.setItem("userId", userId);
     axios.post(`${url}/chat/register`, { userId }).catch(() => {});
-  }, []);
+  }, [url, userId]);
 
   // Poll for admin replies every 3 seconds when in live chat mode
   useEffect(() => {

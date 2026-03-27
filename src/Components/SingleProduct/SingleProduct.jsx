@@ -24,7 +24,7 @@ import Productlist from "../Products/Productlist";
 
 const SingleProduct = () => {
   const selectSizeErrorRef = useRef(null);
-  const [filters, setFilters] = useState({ maxPrice: 5000, selectedSizes: [] });
+  const [filters] = useState({ maxPrice: 5000, selectedSizes: [] });
 
   const renderStars = (rating) => {
     const stars = [];
@@ -159,16 +159,16 @@ const SingleProduct = () => {
                                     (
                                       inner.reviews.reduce(
                                         (acc, review) => acc + review.rating,
-                                        0
+                                        0,
                                       ) / inner.reviews.length
-                                    ).toFixed(1)
+                                    ).toFixed(1),
                                   )}
                                 </span>
                                 &nbsp;
                                 {(
                                   inner.reviews.reduce(
                                     (acc, review) => acc + review.rating,
-                                    0
+                                    0,
                                   ) / inner.reviews.length
                                 ).toFixed(1)}
                                 &nbsp; (
@@ -229,7 +229,7 @@ const SingleProduct = () => {
                                   inner.id,
                                   inner.product_img,
                                   inner.product_name,
-                                  inner.product_price
+                                  inner.product_price,
                                 )
                               }
                             >
@@ -245,7 +245,7 @@ const SingleProduct = () => {
                                   inner.id,
                                   inner.product_img,
                                   inner.product_name,
-                                  inner.product_price
+                                  inner.product_price,
                                 )
                               }
                             >
@@ -269,7 +269,7 @@ const SingleProduct = () => {
                               >
                                 <a
                                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                                    fullUrl
+                                    fullUrl,
                                   )}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -278,7 +278,7 @@ const SingleProduct = () => {
                                 </a>
                                 <a
                                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                                    fullUrl
+                                    fullUrl,
                                   )}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -287,7 +287,7 @@ const SingleProduct = () => {
                                 </a>
                                 <a
                                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                                    fullUrl
+                                    fullUrl,
                                   )}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
